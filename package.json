@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "npx tsx watch src/server.ts"
+    "dev": "npx tsx watch src/server.ts",
+    "test": "npx vitest"
   },
   "keywords": [],
   "author": "",
@@ -14,6 +15,7 @@
     "graphql": "^16.6.0"
   },
   "devDependencies": {
-    "tsx": "^3.12.3"
+    "tsx": "^3.12.3",
+    "vitest": "^0.28.5"
   }
 }
