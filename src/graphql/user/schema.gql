@@ -1,0 +1,23 @@
+type User {
+  id: ID!
+  name: String!
+  email: String!
+  password: String!
+  avatar_url: String
+  created_at: Float!
+}
+
+input UserInput {
+  name: String!
+  email: String!
+  password: String!
+}
+
+type Query {
+  users: [User!]!
+  authenticate(email: String!, password: String!): User
+}
+
+type Mutation {
+  createUser(data: UserInput!): User
+}
