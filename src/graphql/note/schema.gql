@@ -1,0 +1,28 @@
+type Note {
+  id: ID!
+  author: User!
+  title: String!
+  body: String!
+  priority: Boolean!
+  status: Status!
+  deleted_at: DateTime!
+  created_at: DateTime!
+}
+
+enum Status {
+  FINISHED
+  UNFINISHED
+}
+
+type Query {
+  getNotes: [Note]!
+}
+
+type Mutation {
+  writeNote(note: Note!): Note
+  prioritizeNote(id: ID!): Note
+  updateStatus(id: ID!): Note
+  deleteNote(id: ID!): Boolean
+}
+
+scalar DateTime
