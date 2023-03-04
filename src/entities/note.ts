@@ -6,7 +6,7 @@ export interface NoteProps {
   body: string;
   priority: boolean;
   status: Status;
-  deleted_At?: Date;
+  deleted_at?: Date;
   created_at: Date;
 }
 
@@ -17,6 +17,10 @@ export class Note {
 
   get id() {
     return this._id;
+  }
+
+  get author(): User {
+    return this.props.author;
   }
 
   get body() {
@@ -44,11 +48,11 @@ export class Note {
   }
 
   get deleted_at() {
-    return this.props.deleted_At;
+    return this.props.deleted_at;
   }
 
-  deleteNote(date: Date) {
-    this.props.deleted_At = date;
+  delete(date: Date) {
+    this.props.deleted_at = date;
   }
 
   get created_at() {
