@@ -85,7 +85,16 @@ describe("note resolver", () => {
 
     const notes = await inMemoryNotesRepository.getNotes();
 
-    expect(notes).toHaveLength(6);
-    expect(notes.find((note) => note.id === 12)).toBeUndefined();
+    expect(notes.find((note) => note.id === 12)).toHaveProperty(
+      "deleted_at",
+      expect.any(Date)
+    );
+    expect(notes.find((note) => note.id !== 12)).toHaveProperty(
+      "deleted_at",
+      undefined
+    );
+    expect(() =>
+      noteResolver.Mutation.deleteNote(undefined, { id: 99 })
+    ).rejects.toThrow();
   });
 });
