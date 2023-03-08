@@ -3,9 +3,11 @@ import {
   AuthenticateData,
   IUsersRepository,
 } from "../../repositories/users-repository";
+import { DateTimeResolver } from "graphql-scalars";
 
 export function getUserResolver(repository: IUsersRepository) {
   return {
+    DateTime: DateTimeResolver,
     Query: {
       getUsers: async () => await repository.getUsers(),
       authenticate: async (_: any, args: AuthenticateData) =>

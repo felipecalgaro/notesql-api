@@ -4,7 +4,7 @@ type User {
   email: String!
   password: String!
   avatar_url: String
-  created_at: Float!
+  created_at: DateTime!
 }
 
 input UserInput {
@@ -21,3 +21,5 @@ type Query {
 type Mutation {
   createUser(data: UserInput!): User
 }
+
+scalar DateTime
