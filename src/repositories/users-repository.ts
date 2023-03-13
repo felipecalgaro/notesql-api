@@ -1,12 +1,6 @@
-import { User } from "../entities/User";
+import { User } from "../entities/user";
 
 export interface AuthenticateData {
-  email: string;
-  password: string;
-}
-
-export interface CreateUserData {
-  name: string;
   email: string;
   password: string;
 }
