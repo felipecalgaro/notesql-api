@@ -2,8 +2,8 @@ export interface UserProps {
   name: string;
   email: string;
   password: string;
-  avatar_url?: string;
-  created_at: Date;
+  avatar_url?: string | null;
+  created_at?: Date;
 }
 
 export class User {
@@ -25,7 +25,7 @@ export class User {
     return this.props.password;
   }
 
-  get avatar_url(): string | undefined {
+  get avatar_url() {
     return this.props.avatar_url;
   }
 
