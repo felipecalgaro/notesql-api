@@ -8,9 +8,11 @@ describe("user resolver", () => {
   const userResolver = getUserResolver(inMemoryUsersRepository);
 
   it("should be able to get users", async () => {
-    await inMemoryUsersRepository.createUser(makeUser());
-    await inMemoryUsersRepository.createUser(makeUser());
-    await inMemoryUsersRepository.createUser(makeUser());
+    await Promise.all([
+      inMemoryUsersRepository.createUser(makeUser()),
+      inMemoryUsersRepository.createUser(makeUser()),
+      inMemoryUsersRepository.createUser(makeUser()),
+    ]);
 
     const users = await userResolver.Query.getUsers();
 
@@ -26,8 +28,11 @@ describe("user resolver", () => {
 
   it("should be able to authenticate user", async () => {
     const user = makeUser("test-password");
-    await inMemoryUsersRepository.createUser(user);
-    await inMemoryUsersRepository.createUser(makeUser("another-password"));
+
+    await Promise.all([
+      inMemoryUsersRepository.createUser(user),
+      inMemoryUsersRepository.createUser(makeUser("another-password")),
+    ]);
 
     const authenticatedUser = await userResolver.Query.authenticate(undefined, {
       email: user.email,
@@ -49,13 +54,14 @@ describe("user resolver", () => {
   });
 
   it("should be able to create user", async () => {
-    const user = makeUser("321");
-    await userResolver.Mutation.createUser(undefined, user);
+    await userResolver.Mutation.createUser(undefined, {
+      email: "test@email.com",
+      name: "John",
+      password: "123",
+    });
 
-    expect(inMemoryUsersRepository.getUsers()).resolves.toEqual(
-      expect.arrayContaining([
-        expect.objectContaining({ password: user.password }),
-      ])
+    expect(inMemoryUsersRepository.users).toEqual(
+      expect.arrayContaining([expect.objectContaining({ password: "123" })])
     );
   });
 });

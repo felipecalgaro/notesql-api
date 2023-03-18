@@ -7,17 +7,22 @@ describe("note resolver", () => {
   const inMemoryNotesRepository = new InMemoryNotesRepository();
   const noteResolver = getNoteResolver(inMemoryNotesRepository);
 
-  it("should be able to get notes", async () => {
-    await inMemoryNotesRepository.writeNote(makeNote());
-    await inMemoryNotesRepository.writeNote(makeNote());
+  it("should be able to get notes by author", async () => {
+    await Promise.all([
+      inMemoryNotesRepository.writeNote(makeNote("test", 1, 1)),
+      inMemoryNotesRepository.writeNote(makeNote(undefined, 2, 2)),
+      inMemoryNotesRepository.writeNote(makeNote("123456", 3, 2)),
+    ]);
 
-    const users = await noteResolver.Query.getNotes();
+    const notes = await noteResolver.Query.getNotesByAuthor(undefined, {
+      authorId: 2,
+    });
 
-    expect(users.length).toBe(2);
-    expect(users).toEqual(
+    expect(notes.length).toBe(2);
+    expect(notes).toEqual(
       expect.arrayContaining([
-        expect.objectContaining({ title: "My note" }),
-        expect.objectContaining({ title: "My note" }),
+        expect.objectContaining({ author: expect.objectContaining({ id: 2 }) }),
+        expect.objectContaining({ author: expect.objectContaining({ id: 2 }) }),
       ])
     );
   });
@@ -27,10 +32,7 @@ describe("note resolver", () => {
 
     await noteResolver.Mutation.writeNote(undefined, note);
 
-    const notes = await inMemoryNotesRepository.getNotes();
-
-    expect(notes).toHaveLength(3);
-    expect(notes).toEqual(
+    expect(inMemoryNotesRepository.notes).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
           id: 8,
@@ -41,17 +43,17 @@ describe("note resolver", () => {
   });
 
   it("should be able to prioritize a note", async () => {
-    await inMemoryNotesRepository.writeNote(makeNote("123", 10));
-    await inMemoryNotesRepository.writeNote(makeNote("123", 11));
+    await Promise.all([
+      inMemoryNotesRepository.writeNote(makeNote("123", 10)),
+      inMemoryNotesRepository.writeNote(makeNote("123", 11)),
+    ]);
 
     await noteResolver.Mutation.prioritizeNote(undefined, {
       id: 10,
       priority: true,
     });
 
-    const notes = await inMemoryNotesRepository.getNotes();
-
-    expect(notes).toEqual(
+    expect(inMemoryNotesRepository.notes).toEqual(
       expect.arrayContaining([
         expect.objectContaining({ id: 10, priority: true }),
         expect.objectContaining({ id: 11, priority: false }),
@@ -60,17 +62,17 @@ describe("note resolver", () => {
   });
 
   it("should be able to update a note status", async () => {
-    await inMemoryNotesRepository.writeNote(makeNote("1234", 12));
-    await inMemoryNotesRepository.writeNote(makeNote("123", 13));
+    await Promise.all([
+      inMemoryNotesRepository.writeNote(makeNote("1234", 12)),
+      inMemoryNotesRepository.writeNote(makeNote("123", 13)),
+    ]);
 
     await noteResolver.Mutation.updateStatus(undefined, {
       id: 13,
       status: "FINISHED",
     });
 
-    const notes = await inMemoryNotesRepository.getNotes();
-
-    expect(notes).toEqual(
+    expect(inMemoryNotesRepository.notes).toEqual(
       expect.arrayContaining([
         expect.objectContaining({ id: 12, status: "UNFINISHED" }),
         expect.objectContaining({ id: 13, status: "FINISHED" }),
@@ -83,16 +85,12 @@ describe("note resolver", () => {
       id: 12,
     });
 
-    const notes = await inMemoryNotesRepository.getNotes();
-
-    expect(notes.find((note) => note.id === 12)).toHaveProperty(
-      "deleted_at",
-      expect.any(Date)
-    );
-    expect(notes.find((note) => note.id !== 12)).toHaveProperty(
-      "deleted_at",
-      undefined
-    );
+    expect(
+      inMemoryNotesRepository.notes.find((note) => note.id === 12)
+    ).toHaveProperty("deleted_at", expect.any(Date));
+    expect(
+      inMemoryNotesRepository.notes.find((note) => note.id !== 12)
+    ).toHaveProperty("deleted_at", undefined);
     expect(() =>
       noteResolver.Mutation.deleteNote(undefined, { id: 99 })
     ).rejects.toThrow();
