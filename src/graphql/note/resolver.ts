@@ -6,7 +6,8 @@ export function getNoteResolver(repository: INotesRepository) {
   return {
     DateTime: DateTimeResolver,
     Query: {
-      getNotes: async () => await repository.getNotes(),
+      getNotesByAuthor: async (_: any, args: { authorId: number }) =>
+        await repository.getNotesByAuthor(args.authorId),
     },
     Mutation: {
       writeNote: async (_: any, args: Note) => await repository.writeNote(args),
