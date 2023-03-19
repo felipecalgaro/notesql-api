@@ -1,9 +1,11 @@
 import { User } from "../../entities/user";
 import {
   AuthenticateData,
+  CreateUserData,
   IUsersRepository,
 } from "../../repositories/users-repository";
 import { DateTimeResolver } from "graphql-scalars";
+import { Name } from "../../entities/name";
 
 export function getUserResolver(repository: IUsersRepository) {
   return {
@@ -14,8 +16,15 @@ export function getUserResolver(repository: IUsersRepository) {
         await repository.authenticate(args),
     },
     Mutation: {
-      createUser: async (_: any, args: User) =>
-        await repository.createUser(args),
+      createUser: async (_: any, args: CreateUserData) => {
+        const user = new User({
+          email: args.email,
+          name: new Name(args.name).value,
+          password: args.password,
+        });
+
+        await repository.createUser(user);
+      },
     },
   };
 }
