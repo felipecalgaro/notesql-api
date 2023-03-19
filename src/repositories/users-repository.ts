@@ -5,6 +5,12 @@ export interface AuthenticateData {
   password: string;
 }
 
+export interface CreateUserData {
+  email: string;
+  password: string;
+  name: string;
+}
+
 export interface IUsersRepository {
   getUsers: () => Promise<User[]>;
   authenticate: (data: AuthenticateData) => Promise<User | null>;
