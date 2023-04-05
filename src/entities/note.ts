@@ -1,13 +1,13 @@
 import { User } from "./user";
 
 export interface NoteProps {
-  author: User;
+  author?: User;
   title: string;
   body: string;
   priority: boolean;
   status: Status;
   deleted_at?: Date;
-  created_at: Date;
+  created_at?: Date;
 }
 
 export type Status = "FINISHED" | "UNFINISHED";
@@ -19,7 +19,7 @@ export class Note {
     return this._id;
   }
 
-  get author(): User {
+  get author() {
     return this.props.author;
   }
 
@@ -51,8 +51,10 @@ export class Note {
     return this.props.deleted_at;
   }
 
-  delete(date: Date) {
-    this.props.deleted_at = date;
+  delete() {
+    this.props.deleted_at = new Date();
+
+    return true;
   }
 
   get created_at() {
