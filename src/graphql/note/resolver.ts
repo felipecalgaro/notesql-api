@@ -1,22 +1,42 @@
 import { DateTimeResolver } from "graphql-scalars";
-import { Note, Status } from "../../entities/note";
 import { INotesRepository } from "../../repositories/notes-repository";
+import {
+  WriteNoteArgs,
+  writeNoteService,
+} from "./services/mutation/write-note-service";
+import {
+  PrioritizeNoteArgs,
+  prioritizeNoteService,
+} from "./services/mutation/prioritize-note-service";
+import {
+  UpdateNoteStatusArgs,
+  updateNoteStatusService,
+} from "./services/mutation/update-note-status-service";
+import {
+  DeleteNoteArgs,
+  deleteNoteService,
+} from "./services/mutation/delete-note-service";
+import {
+  GetNotesByAuthorArgs,
+  getNotesByAuthorService,
+} from "./services/query/get-notes-by-author-service";
 
 export function getNoteResolver(repository: INotesRepository) {
   return {
     DateTime: DateTimeResolver,
     Query: {
-      getNotesByAuthor: async (_: any, args: { authorId: number }) =>
-        await repository.getNotesByAuthor(args.authorId),
+      getNotesByAuthor: async (_: any, args: GetNotesByAuthorArgs) =>
+        await getNotesByAuthorService(args, repository),
     },
     Mutation: {
-      writeNote: async (_: any, args: Note) => await repository.writeNote(args),
-      prioritizeNote: async (_: any, args: { id: number; priority: boolean }) =>
-        await repository.prioritizeNote(args.id, args.priority),
-      updateStatus: async (_: any, args: { id: number; status: Status }) =>
-        await repository.updateStatus(args.id, args.status),
-      deleteNote: async (_: any, args: { id: number }) =>
-        await repository.deleteNote(args.id),
+      writeNote: async (_: any, args: WriteNoteArgs) =>
+        await writeNoteService(args, repository),
+      prioritizeNote: async (_: any, args: PrioritizeNoteArgs) =>
+        await prioritizeNoteService(args, repository),
+      updateStatus: async (_: any, args: UpdateNoteStatusArgs) =>
+        await updateNoteStatusService(args, repository),
+      deleteNote: async (_: any, args: DeleteNoteArgs) =>
+        await deleteNoteService(args, repository),
     },
   };
 }
