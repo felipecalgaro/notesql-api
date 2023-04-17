@@ -1,30 +1,26 @@
-import { User } from "../../entities/user";
-import {
-  AuthenticateData,
-  CreateUserData,
-  IUsersRepository,
-} from "../../repositories/users-repository";
+import { IUsersRepository } from "../../repositories/users-repository";
 import { DateTimeResolver } from "graphql-scalars";
-import { Name } from "../../entities/name";
+import {
+  AuthenticateArgs,
+  authenticateUserService,
+} from "./services/query/authenticate-service";
+import { getUsersService } from "./services/query/get-users-service";
+import {
+  CreateUserArgs,
+  createUserService,
+} from "./services/mutation/create-user-service";
 
 export function getUserResolver(repository: IUsersRepository) {
   return {
     DateTime: DateTimeResolver,
     Query: {
-      getUsers: async () => await repository.getUsers(),
-      authenticate: async (_: any, args: AuthenticateData) =>
-        await repository.authenticate(args),
+      getUsers: async () => await getUsersService(repository),
+      authenticateUser: async (_: any, args: AuthenticateArgs) =>
+        await authenticateUserService(args, repository),
     },
     Mutation: {
-      createUser: async (_: any, args: CreateUserData) => {
-        const user = new User({
-          email: args.email,
-          name: new Name(args.name).value,
-          password: args.password,
-        });
-
-        await repository.createUser(user);
-      },
+      createUser: async (_: any, args: CreateUserArgs) =>
+        await createUserService(args, repository),
     },
   };
 }
