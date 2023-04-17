@@ -14,8 +14,8 @@ input UserInput {
 }
 
 type Query {
-  users: [User!]!
-  authenticate(email: String!, password: String!): User
+  getUsers: [User!]!
+  authenticateUser(email: String!, password: String!): User
 }
 
 type Mutation {
