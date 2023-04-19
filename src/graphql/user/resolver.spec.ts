@@ -29,28 +29,26 @@ describe("user resolver", () => {
   it("should be able to authenticate user", async () => {
     const user = makeUser("test-password");
 
-    await Promise.all([
-      inMemoryUsersRepository.createUser(user),
-      inMemoryUsersRepository.createUser(makeUser("another-password")),
-    ]);
+    await inMemoryUsersRepository.createUser(user);
 
-    const authenticatedUser = await userResolver.Query.authenticate(undefined, {
-      email: user.email,
-      password: user.password,
-    });
-
-    const unauthenticatedUser = await userResolver.Query.authenticate(
+    const authenticatedUser = await userResolver.Query.authenticateUser(
       undefined,
       {
-        email: "fake@email.com",
-        password: "123",
+        email: "test@test.com",
+        password: "test-password",
       }
     );
 
     expect(authenticatedUser).toEqual(
       expect.objectContaining({ email: user.email, password: user.password })
     );
-    expect(unauthenticatedUser).toBeFalsy();
+
+    expect(() =>
+      userResolver.Query.authenticateUser(undefined, {
+        email: "fake@email.com",
+        password: "123",
+      })
+    ).rejects.toThrow();
   });
 
   it("should be able to create user", async () => {

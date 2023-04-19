@@ -1,7 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { InMemoryNotesRepository } from "../../../test/in-memory-repositories/in-memory-notes-repository";
 import { getNoteResolver } from "./resolver";
-import { makeNote } from "../../../test/factory/note-factory";
 
 describe("note resolver", () => {
   const inMemoryNotesRepository = new InMemoryNotesRepository();
@@ -9,34 +8,39 @@ describe("note resolver", () => {
 
   it("should be able to get notes by author", async () => {
     await Promise.all([
-      inMemoryNotesRepository.writeNote(makeNote("test", 1, 1)),
-      inMemoryNotesRepository.writeNote(makeNote(undefined, 2, 2)),
-      inMemoryNotesRepository.writeNote(makeNote("123456", 3, 2)),
+      inMemoryNotesRepository.writeNote(
+        { title: "My note", body: "This is a note." },
+        1
+      ),
+      inMemoryNotesRepository.writeNote(
+        { title: "Another note", body: "This is another note." },
+        2
+      ),
     ]);
 
     const notes = await noteResolver.Query.getNotesByAuthor(undefined, {
       authorId: 2,
     });
 
-    expect(notes.length).toBe(2);
+    expect(notes.length).toBe(1);
     expect(notes).toEqual(
       expect.arrayContaining([
-        expect.objectContaining({ author: expect.objectContaining({ id: 2 }) }),
         expect.objectContaining({ author: expect.objectContaining({ id: 2 }) }),
       ])
     );
   });
 
   it("should be able to write a note", async () => {
-    const note = makeNote("test-password", 8);
-
-    await noteResolver.Mutation.writeNote(undefined, note);
+    await noteResolver.Mutation.writeNote(undefined, {
+      authorId: 8,
+      body: "This is a note.",
+      title: "My note",
+    });
 
     expect(inMemoryNotesRepository.notes).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
-          id: 8,
-          author: expect.objectContaining({ password: "test-password" }),
+          author: expect.objectContaining({ id: 8 }),
         }),
       ])
     );
@@ -44,8 +48,14 @@ describe("note resolver", () => {
 
   it("should be able to prioritize a note", async () => {
     await Promise.all([
-      inMemoryNotesRepository.writeNote(makeNote("123", 10)),
-      inMemoryNotesRepository.writeNote(makeNote("123", 11)),
+      inMemoryNotesRepository.writeNote(
+        { body: "This is a note", title: "Note-10" },
+        10
+      ),
+      inMemoryNotesRepository.writeNote(
+        { body: "This is a note", title: "Note-11" },
+        11
+      ),
     ]);
 
     await noteResolver.Mutation.prioritizeNote(undefined, {
@@ -63,8 +73,14 @@ describe("note resolver", () => {
 
   it("should be able to update a note status", async () => {
     await Promise.all([
-      inMemoryNotesRepository.writeNote(makeNote("1234", 12)),
-      inMemoryNotesRepository.writeNote(makeNote("123", 13)),
+      inMemoryNotesRepository.writeNote(
+        { body: "This is a test", title: "Note-12" },
+        12
+      ),
+      inMemoryNotesRepository.writeNote(
+        { body: "This is a test", title: "Note-13" },
+        13
+      ),
     ]);
 
     await noteResolver.Mutation.updateStatus(undefined, {
