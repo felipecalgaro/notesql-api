@@ -1,11 +1,9 @@
 import { User } from "../../../entities/user";
-import {
-  AuthenticateData,
-  IUsersRepository,
-} from "../../../repositories/users-repository";
+import { IUsersRepository } from "../../../repositories/users-repository";
 
 import { PrismaClient } from "@prisma/client";
 import { prismaUserMapper } from "../mappers/prisma-user-mapper";
+import { AuthenticateArgs } from "../../../graphql/user/services/query/authenticate-service";
 
 export interface RawUser {
   id: number;
@@ -25,7 +23,7 @@ export class PrismaUsersRepository implements IUsersRepository {
     return users.map(prismaUserMapper.toDomain);
   }
 
-  async authenticate(data: AuthenticateData): Promise<User | null> {
+  async authenticateUser(data: AuthenticateArgs): Promise<User | null> {
     const user = await this.prisma.user.findFirst({
       where: {
         email: data.email,
