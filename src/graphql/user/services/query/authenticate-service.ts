@@ -1,4 +1,5 @@
 import { IUsersRepository } from "../../../../repositories/users-repository";
+import { authService } from "../auth";
 
 export interface AuthenticateArgs {
   email: string;
@@ -11,9 +12,18 @@ export async function authenticateUserService(
 ) {
   const { email, password } = args;
 
-  const user = await repository.authenticateUser({ email, password });
+  const user = await repository.authenticateUser({
+    email,
+  });
 
-  if (!user) throw new Error("Incorrect credentials.");
+  if (!user) throw new Error("Incorrect e-mail.");
+
+  const isPasswordValid = await authService.comparePassword(
+    password,
+    user.password
+  );
+
+  if (!isPasswordValid) throw new Error("Incorrect password.");
 
   return user;
 }

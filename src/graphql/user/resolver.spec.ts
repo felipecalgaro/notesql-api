@@ -2,6 +2,7 @@ import { makeUser } from "../../../test/factory/user-factory";
 import { InMemoryUsersRepository } from "../../../test/in-memory-repositories/in-memory-users-repository";
 import { describe, expect, it } from "vitest";
 import { getUserResolver } from "./resolver";
+import { authService } from "./services/auth";
 
 describe("user resolver", () => {
   const inMemoryUsersRepository = new InMemoryUsersRepository();
@@ -27,14 +28,16 @@ describe("user resolver", () => {
   });
 
   it("should be able to authenticate user", async () => {
-    const user = makeUser("test-password");
+    const hashedPassword = await authService.hashPassword("test-password");
+
+    const user = makeUser(hashedPassword, "auth-test@email.com");
 
     await inMemoryUsersRepository.createUser(user);
 
     const authenticatedUser = await userResolver.Query.authenticateUser(
       undefined,
       {
-        email: "test@test.com",
+        email: "auth-test@email.com",
         password: "test-password",
       }
     );
@@ -53,13 +56,18 @@ describe("user resolver", () => {
 
   it("should be able to create user", async () => {
     await userResolver.Mutation.createUser(undefined, {
-      email: "test@email.com",
+      email: "create-user@email.com",
       name: "John",
       password: "123",
     });
 
     expect(inMemoryUsersRepository.users).toEqual(
-      expect.arrayContaining([expect.objectContaining({ password: "123" })])
+      expect.arrayContaining([
+        expect.objectContaining({
+          name: "John",
+          email: "create-user@email.com",
+        }),
+      ])
     );
   });
 });
