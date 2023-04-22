@@ -12,9 +12,7 @@ export async function authenticateUserService(
 ) {
   const { email, password } = args;
 
-  const user = await repository.authenticateUser({
-    email,
-  });
+  const user = await repository.authenticateUser(email);
 
   if (!user) throw new Error("Incorrect e-mail.");
 
