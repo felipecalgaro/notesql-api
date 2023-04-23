@@ -2,9 +2,11 @@ import { Note } from "../../../../entities/note";
 import { INotesRepository } from "../../../../repositories/notes-repository";
 
 export interface WriteNoteArgs {
-  body: string;
-  title: string;
-  authorId: number;
+  note: {
+    body: string;
+    title: string;
+    authorId: number;
+  };
 }
 
 export async function writeNoteService(
@@ -12,13 +14,13 @@ export async function writeNoteService(
   repository: INotesRepository
 ) {
   const note = new Note({
-    body: args.body,
-    title: args.title,
+    body: args.note.body,
+    title: args.note.title,
     priority: false,
     status: "UNFINISHED",
   });
 
-  const writtenNote = await repository.writeNote(note, args.authorId);
+  const writtenNote = await repository.writeNote(note, args.note.authorId);
 
   if (!writtenNote) throw new Error("Error while writing a note.");
 

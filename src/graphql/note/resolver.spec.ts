@@ -32,9 +32,11 @@ describe("note resolver", () => {
 
   it("should be able to write a note", async () => {
     await noteResolver.Mutation.writeNote(undefined, {
-      authorId: 8,
-      body: "This is a note.",
-      title: "My note",
+      note: {
+        authorId: 8,
+        body: "This is a note.",
+        title: "My note",
+      },
     });
 
     expect(inMemoryNotesRepository.notes).toEqual(

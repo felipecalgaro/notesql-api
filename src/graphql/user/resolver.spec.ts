@@ -56,9 +56,11 @@ describe("user resolver", () => {
 
   it("should be able to create user", async () => {
     await userResolver.Mutation.createUser(undefined, {
-      email: "create-user@email.com",
-      name: "John",
-      password: "123",
+      user: {
+        email: "create-user@email.com",
+        name: "John",
+        password: "123",
+      },
     });
 
     expect(inMemoryUsersRepository.users).toEqual(

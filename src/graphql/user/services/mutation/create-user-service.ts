@@ -4,20 +4,22 @@ import { IUsersRepository } from "../../../../repositories/users-repository";
 import { authService } from "../auth";
 
 export interface CreateUserArgs {
-  email: string;
-  password: string;
-  name: string;
+  user: {
+    email: string;
+    password: string;
+    name: string;
+  };
 }
 
 export async function createUserService(
   args: CreateUserArgs,
   repository: IUsersRepository
 ) {
-  const hashedPassword = await authService.hashPassword(args.password);
+  const hashedPassword = await authService.hashPassword(args.user.password);
 
   const user = new User({
-    email: args.email,
-    name: new Name(args.name).value,
+    email: args.user.email,
+    name: new Name(args.user.name).value,
     password: hashedPassword,
   });
 

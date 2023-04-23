@@ -9,17 +9,23 @@ type Note {
   created_at: DateTime!
 }
 
+input NoteInput {
+  body: String!
+  title: String!
+  authorId: ID!
+}
+
 enum Status {
   FINISHED
   UNFINISHED
 }
 
 type Query {
-  getNotes: [Note]!
+  getNotesByAuthor: [Note]!
 }
 
 type Mutation {
-  writeNote(note: Note!): Note
+  writeNote(note: NoteInput!): Note
   prioritizeNote(id: ID!): Note
   updateStatus(id: ID!): Note
   deleteNote(id: ID!): Boolean

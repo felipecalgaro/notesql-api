@@ -19,7 +19,7 @@ type Query {
 }
 
 type Mutation {
-  createUser(data: UserInput!): User
+  createUser(user: UserInput!): User
 }
 
 scalar DateTime
