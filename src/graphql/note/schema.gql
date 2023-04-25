@@ -5,7 +5,7 @@ type Note {
   body: String!
   priority: Boolean!
   status: Status!
-  deleted_at: DateTime!
+  deleted_at: DateTime
   created_at: DateTime!
 }
 
@@ -25,10 +25,10 @@ type Query {
 }
 
 type Mutation {
-  writeNote(note: NoteInput!): Note
-  prioritizeNote(id: ID!): Note
-  updateStatus(id: ID!): Note
-  deleteNote(id: ID!): Boolean
+  writeNote(note: NoteInput!): Note!
+  prioritizeNote(id: ID!, priority: Boolean!): Note!
+  updateStatus(id: ID!, status: Status!): Note!
+  deleteNote(id: ID!): Boolean!
 }
 
 scalar DateTime

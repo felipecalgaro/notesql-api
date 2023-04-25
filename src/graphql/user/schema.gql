@@ -1,5 +1,6 @@
 type User {
   id: ID!
+  notes: [Note!]
   name: String!
   email: String!
   password: String!
@@ -15,11 +16,11 @@ input UserInput {
 
 type Query {
   getUsers: [User!]!
-  authenticateUser(email: String!, password: String!): User
+  authenticateUser(email: String!, password: String!): User!
 }
 
 type Mutation {
-  createUser(user: UserInput!): User
+  createUser(user: UserInput!): User!
 }
 
 scalar DateTime
