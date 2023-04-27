@@ -5,7 +5,7 @@ export interface WriteNoteArgs {
   note: {
     body: string;
     title: string;
-    authorId: number;
+    authorId: string;
   };
 }
 
@@ -20,7 +20,10 @@ export async function writeNoteService(
     status: "UNFINISHED",
   });
 
-  const writtenNote = await repository.writeNote(note, args.note.authorId);
+  const writtenNote = await repository.writeNote(
+    note,
+    Number(args.note.authorId)
+  );
 
   if (!writtenNote) throw new Error("Error while writing a note.");
 
