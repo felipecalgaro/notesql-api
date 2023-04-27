@@ -1,4 +1,7 @@
+import { Note } from "./note";
+
 export interface UserProps {
+  notes?: Note[];
   name: string;
   email: string;
   password: string;
@@ -11,6 +14,10 @@ export class User {
 
   get id() {
     return this._id;
+  }
+
+  get notes() {
+    return this.props.notes;
   }
 
   get name() {
