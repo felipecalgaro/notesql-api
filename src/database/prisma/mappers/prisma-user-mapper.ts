@@ -1,6 +1,7 @@
 import { Name } from "../../../entities/name";
 import { User } from "../../../entities/user";
 import { RawUser } from "../repositories/prisma-users-repository";
+import { prismaIncludedNoteMapper } from "./prisma-included-note-mapper";
 
 export const prismaUserMapper = {
   toPrisma: (user: User) => {
@@ -13,7 +14,7 @@ export const prismaUserMapper = {
       id: user.id,
     };
   },
-  toDomain: (raw: RawUser) => {
+  toDomain: (raw: RawUser): User => {
     return new User(
       {
         created_at: raw.created_at,
@@ -21,6 +22,7 @@ export const prismaUserMapper = {
         name: new Name(raw.name).value,
         password: raw.password,
         avatar_url: raw.avatar_url,
+        notes: raw.notes?.map(prismaIncludedNoteMapper.toDomain),
       },
       raw.id
     );
