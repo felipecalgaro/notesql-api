@@ -15,6 +15,8 @@ export interface RawNote {
   created_at: Date;
 }
 
+export type IncludedRawNote = Omit<RawNote, "author">;
+
 export class PrismaNotesRepository implements INotesRepository {
   constructor(private readonly prisma: PrismaClient) {}
 
@@ -22,6 +24,7 @@ export class PrismaNotesRepository implements INotesRepository {
     const notes = await this.prisma.note.findMany({
       where: {
         author_id: authorId,
+        deleted_at: null,
       },
       include: {
         author: true,
@@ -32,17 +35,9 @@ export class PrismaNotesRepository implements INotesRepository {
   }
 
   async writeNote(data: Note, authorId: number): Promise<Note | null> {
-    const note = prismaNoteMapper.toPrisma(data);
-
     const raw = await this.prisma.note.create({
       data: {
-        body: note.body,
-        priority: note.priority,
-        status: note.status,
-        title: note.title,
-        created_at: note.created_at,
-        deleted_at: note.deleted_at,
-        id: note.id,
+        ...prismaNoteMapper.toPrisma(data),
         author_id: authorId,
       },
       include: {
@@ -93,7 +88,10 @@ export class PrismaNotesRepository implements INotesRepository {
   }
 
   async deleteNote(noteId: number): Promise<boolean> {
-    const note = await this.prisma.note.findUnique({
+    const note = await this.prisma.note.update({
+      data: {
+        deleted_at: new Date(),
+      },
       where: {
         id: noteId,
       },
