@@ -10,7 +10,10 @@ export interface NoteProps {
   created_at?: Date;
 }
 
-export type Status = "FINISHED" | "UNFINISHED";
+export enum Status {
+  FINISHED = "FINISHED",
+  UNFINISHED = "UNFINISHED",
+}
 
 export class Note {
   constructor(private props: NoteProps, private _id?: number) {}

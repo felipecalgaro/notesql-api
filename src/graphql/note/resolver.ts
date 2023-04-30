@@ -20,9 +20,11 @@ import {
   GetNotesByAuthorArgs,
   getNotesByAuthorService,
 } from "./services/query/get-notes-by-author-service";
+import { Status } from "../../entities/note";
 
 export function getNoteResolver(repository: INotesRepository) {
   return {
+    Status,
     DateTime: DateTimeResolver,
     Query: {
       getNotesByAuthor: async (_: any, args: GetNotesByAuthorArgs) =>
