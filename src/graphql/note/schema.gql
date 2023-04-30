@@ -21,7 +21,7 @@ enum Status {
 }
 
 type Query {
-  getNotesByAuthor: [Note]!
+  getNotesByAuthor(authorId: ID!): [Note!]
 }
 
 type Mutation {
