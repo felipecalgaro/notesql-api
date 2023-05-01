@@ -1,9 +1,8 @@
 import { User } from "../../../entities/user";
 import { IUsersRepository } from "../../../repositories/users-repository";
-
 import { PrismaClient } from "@prisma/client";
 import { prismaUserMapper } from "../mappers/prisma-user-mapper";
-import { RawNote } from "./prisma-notes-repository";
+import { IncludedRawNote } from "./prisma-notes-repository";
 
 export interface RawUser {
   id: number;
@@ -12,7 +11,7 @@ export interface RawUser {
   password: string;
   avatar_url?: string | null;
   created_at: Date;
-  notes?: RawNote[];
+  notes?: IncludedRawNote[];
 }
 
 export class PrismaUsersRepository implements IUsersRepository {
@@ -21,7 +20,11 @@ export class PrismaUsersRepository implements IUsersRepository {
   async getUsers(): Promise<User[]> {
     const users = await this.prisma.user.findMany({
       include: {
-        notes: true,
+        notes: {
+          where: {
+            deleted_at: null,
+          },
+        },
       },
     });
 
@@ -34,7 +37,11 @@ export class PrismaUsersRepository implements IUsersRepository {
         email,
       },
       include: {
-        notes: true,
+        notes: {
+          where: {
+            deleted_at: null,
+          },
+        },
       },
     });
 
@@ -47,7 +54,11 @@ export class PrismaUsersRepository implements IUsersRepository {
     const user = await this.prisma.user.create({
       data: prismaUserMapper.toPrisma(raw),
       include: {
-        notes: true,
+        notes: {
+          where: {
+            deleted_at: null,
+          },
+        },
       },
     });
 
