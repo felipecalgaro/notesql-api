@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { InMemoryNotesRepository } from "../../../test/in-memory-repositories/in-memory-notes-repository";
 import { getNoteResolver } from "./resolver";
+import { Status } from "../../entities/note";
 
 describe("note resolver", () => {
   const inMemoryNotesRepository = new InMemoryNotesRepository();
@@ -18,9 +19,19 @@ describe("note resolver", () => {
       ),
     ]);
 
-    const notes = await noteResolver.Query.getNotesByAuthor(undefined, {
-      authorId: 2,
-    });
+    const notes = await noteResolver.Query.getNotesByAuthor(
+      undefined,
+      {
+        authorId: "2",
+      },
+      {
+        user: {
+          id: 2,
+          email: "test@email.com",
+          name: "John Doe",
+        },
+      }
+    );
 
     expect(notes.length).toBe(1);
     expect(notes).toEqual(
@@ -31,13 +42,23 @@ describe("note resolver", () => {
   });
 
   it("should be able to write a note", async () => {
-    await noteResolver.Mutation.writeNote(undefined, {
-      note: {
-        authorId: 8,
-        body: "This is a note.",
-        title: "My note",
+    await noteResolver.Mutation.writeNote(
+      undefined,
+      {
+        note: {
+          authorId: "8",
+          body: "This is a note.",
+          title: "My note",
+        },
       },
-    });
+      {
+        user: {
+          id: 8,
+          email: "test@email.com",
+          name: "John Doe",
+        },
+      }
+    );
 
     expect(inMemoryNotesRepository.notes).toEqual(
       expect.arrayContaining([
@@ -60,10 +81,20 @@ describe("note resolver", () => {
       ),
     ]);
 
-    await noteResolver.Mutation.prioritizeNote(undefined, {
-      id: 10,
-      priority: true,
-    });
+    await noteResolver.Mutation.prioritizeNote(
+      undefined,
+      {
+        id: "10",
+        priority: true,
+      },
+      {
+        user: {
+          id: 10,
+          email: "test@email.com",
+          name: "John Doe",
+        },
+      }
+    );
 
     expect(inMemoryNotesRepository.notes).toEqual(
       expect.arrayContaining([
@@ -85,10 +116,20 @@ describe("note resolver", () => {
       ),
     ]);
 
-    await noteResolver.Mutation.updateStatus(undefined, {
-      id: 13,
-      status: "FINISHED",
-    });
+    await noteResolver.Mutation.updateStatus(
+      undefined,
+      {
+        id: "13",
+        status: Status.FINISHED,
+      },
+      {
+        user: {
+          id: 13,
+          email: "test1@email.com",
+          name: "John Doe",
+        },
+      }
+    );
 
     expect(inMemoryNotesRepository.notes).toEqual(
       expect.arrayContaining([
@@ -99,9 +140,19 @@ describe("note resolver", () => {
   });
 
   it("should be able to delete a note", async () => {
-    await noteResolver.Mutation.deleteNote(undefined, {
-      id: 12,
-    });
+    await noteResolver.Mutation.deleteNote(
+      undefined,
+      {
+        id: "12",
+      },
+      {
+        user: {
+          id: 12,
+          email: "test1@email.com",
+          name: "John Doe",
+        },
+      }
+    );
 
     expect(
       inMemoryNotesRepository.notes.find((note) => note.id === 12)
@@ -110,7 +161,17 @@ describe("note resolver", () => {
       inMemoryNotesRepository.notes.find((note) => note.id !== 12)
     ).toHaveProperty("deleted_at", undefined);
     expect(() =>
-      noteResolver.Mutation.deleteNote(undefined, { id: 99 })
+      noteResolver.Mutation.deleteNote(
+        undefined,
+        { id: "99" },
+        {
+          user: {
+            id: 99,
+            email: "test1@email.com",
+            name: "John Doe",
+          },
+        }
+      )
     ).rejects.toThrow();
   });
 });

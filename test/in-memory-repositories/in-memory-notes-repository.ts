@@ -34,7 +34,7 @@ export class InMemoryNotesRepository implements INotesRepository {
         body: data.body,
         created_at: new Date(),
         priority: false,
-        status: "UNFINISHED",
+        status: Status.UNFINISHED,
         title: data.title,
       },
       authorId ?? 1

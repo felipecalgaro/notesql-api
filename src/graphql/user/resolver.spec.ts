@@ -34,13 +34,11 @@ describe("user resolver", () => {
 
     await inMemoryUsersRepository.createUser(user);
 
-    const authenticatedUser = await userResolver.Query.authenticateUser(
-      undefined,
-      {
+    const { user: authenticatedUser } =
+      await userResolver.Query.authenticateUser(undefined, {
         email: "auth-test@email.com",
         password: "test-password",
-      }
-    );
+      });
 
     expect(authenticatedUser).toEqual(
       expect.objectContaining({ email: user.email, password: user.password })
