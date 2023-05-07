@@ -1,5 +1,9 @@
 import { IUsersRepository } from "../../../../repositories/users-repository";
 import { authService } from "../auth";
+import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 export interface AuthenticateArgs {
   email: string;
@@ -23,5 +27,15 @@ export async function authenticateUserService(
 
   if (!isPasswordValid) throw new Error("Incorrect password.");
 
-  return user;
+  const token = jwt.sign(
+    {
+      userId: user.id,
+      name: user.name,
+      email: user.email,
+    },
+    process.env.ACCESS_TOKEN_SECRET,
+    { expiresIn: "1d" }
+  );
+
+  return { token, user };
 }

@@ -10,6 +10,14 @@ import {
   createUserService,
 } from "./services/mutation/create-user-service";
 
+export interface UserContext {
+  user?: {
+    id: number;
+    name: string;
+    email: string;
+  };
+}
+
 export function getUserResolver(repository: IUsersRepository) {
   return {
     DateTime: DateTimeResolver,

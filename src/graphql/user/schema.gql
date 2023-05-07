@@ -14,13 +14,18 @@ input UserInput {
   password: String!
 }
 
+type AuthPayload {
+  token: String!
+  user: User!
+}
+
 type Query {
   getUsers: [User!]!
-  authenticateUser(email: String!, password: String!): User!
+  authenticateUser(email: String!, password: String!): AuthPayload!
 }
 
 type Mutation {
-  createUser(user: UserInput!): User!
+  createUser(user: UserInput!): AuthPayload!
 }
 
 scalar DateTime

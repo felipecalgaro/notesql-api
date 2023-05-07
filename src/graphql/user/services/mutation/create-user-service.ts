@@ -2,6 +2,7 @@ import { Name } from "../../../../entities/name";
 import { User } from "../../../../entities/user";
 import { IUsersRepository } from "../../../../repositories/users-repository";
 import { authService } from "../auth";
+import jwt from "jsonwebtoken";
 
 export interface CreateUserArgs {
   user: {
@@ -27,5 +28,15 @@ export async function createUserService(
 
   if (!createdUser) throw new Error("Error while creating a user.");
 
-  return createdUser;
+  const token = jwt.sign(
+    {
+      userId: createdUser.id,
+      name: user.name,
+      email: user.email,
+    },
+    process.env.ACCESS_TOKEN_SECRET,
+    { expiresIn: "1y" }
+  );
+
+  return { token, user };
 }
