@@ -38,5 +38,5 @@ export async function createUserService(
     { expiresIn: "1y" }
   );
 
-  return { token, user };
+  return { token, user: createdUser };
 }

@@ -13,7 +13,7 @@ export class Name {
     const isContentValid = this.validateContentLength(content);
 
     if (!isContentValid) {
-      throw new Error("Content must have maximum length of 30 characters.");
+      throw new Error("Name must have maximum length of 30 characters.");
     }
 
     this.content = content;
