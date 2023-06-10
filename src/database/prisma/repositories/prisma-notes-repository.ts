@@ -29,6 +29,11 @@ export class PrismaNotesRepository implements INotesRepository {
       include: {
         author: true,
       },
+      orderBy: [
+        { priority: "desc" },
+        { created_at: "desc" },
+        { status: "asc" },
+      ],
     });
 
     return notes.map(prismaNoteMapper.toDomain);
