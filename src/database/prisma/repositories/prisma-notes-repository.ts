@@ -20,25 +20,6 @@ export type IncludedRawNote = Omit<RawNote, "author">;
 export class PrismaNotesRepository implements INotesRepository {
   constructor(private readonly prisma: PrismaClient) {}
 
-  async getNotesByAuthor(authorId: number): Promise<Note[]> {
-    const notes = await this.prisma.note.findMany({
-      where: {
-        author_id: authorId,
-        deleted_at: null,
-      },
-      include: {
-        author: true,
-      },
-      orderBy: [
-        { priority: "desc" },
-        { created_at: "desc" },
-        { status: "asc" },
-      ],
-    });
-
-    return notes.map(prismaNoteMapper.toDomain);
-  }
-
   async writeNote(data: Note, authorId: number): Promise<Note | null> {
     const raw = await this.prisma.note.create({
       data: {

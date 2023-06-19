@@ -7,40 +7,6 @@ describe("note resolver", () => {
   const inMemoryNotesRepository = new InMemoryNotesRepository();
   const noteResolver = getNoteResolver(inMemoryNotesRepository);
 
-  it("should be able to get notes by author", async () => {
-    await Promise.all([
-      inMemoryNotesRepository.writeNote(
-        { title: "My note", body: "This is a note." },
-        1
-      ),
-      inMemoryNotesRepository.writeNote(
-        { title: "Another note", body: "This is another note." },
-        2
-      ),
-    ]);
-
-    const notes = await noteResolver.Query.getNotesByAuthor(
-      undefined,
-      {
-        authorId: "2",
-      },
-      {
-        user: {
-          id: 2,
-          email: "test@email.com",
-          name: "John Doe",
-        },
-      }
-    );
-
-    expect(notes.length).toBe(1);
-    expect(notes).toEqual(
-      expect.arrayContaining([
-        expect.objectContaining({ author: expect.objectContaining({ id: 2 }) }),
-      ])
-    );
-  });
-
   it("should be able to write a note", async () => {
     await noteResolver.Mutation.writeNote(
       undefined,

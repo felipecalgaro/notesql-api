@@ -7,10 +7,6 @@ import { InMemoryUsersRepository } from "./in-memory-users-repository";
 export class InMemoryNotesRepository implements INotesRepository {
   public notes: Note[] = [];
 
-  async getNotesByAuthor(authorId: number): Promise<Note[]> {
-    return this.notes.filter((note) => note.author!.id === authorId);
-  }
-
   async writeNote(
     data: { body: string; title: string },
     authorId: number

@@ -22,6 +22,7 @@ type AuthPayload {
 type Query {
   getUsers: [User!]!
   authenticateUser(email: String!, password: String!): AuthPayload!
+  getUserAndNotes(id: ID!): User!
 }
 
 type Mutation {

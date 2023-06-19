@@ -20,10 +20,6 @@ enum Status {
   UNFINISHED
 }
 
-type Query {
-  getNotesByAuthor(authorId: ID!): [Note!]
-}
-
 type Mutation {
   writeNote(note: NoteInput!): Note!
   prioritizeNote(id: ID!, priority: Boolean!): Note!

@@ -3,6 +3,7 @@ import { InMemoryUsersRepository } from "../../../test/in-memory-repositories/in
 import { describe, expect, it } from "vitest";
 import { getUserResolver } from "./resolver";
 import { authService } from "./services/auth";
+import { makeNote } from "../../../test/factory/note-factory";
 
 describe("user resolver", () => {
   const inMemoryUsersRepository = new InMemoryUsersRepository();
@@ -69,5 +70,42 @@ describe("user resolver", () => {
         }),
       ])
     );
+  });
+
+  it("should be able to get a user and their notes", async () => {
+    const notes = [makeNote(20), makeNote(21)];
+    const user = makeUser("test-password", "test@test.com", 98, notes);
+
+    await inMemoryUsersRepository.createUser(user);
+
+    const data = await userResolver.Query.getUserAndNotes(
+      undefined,
+      { id: user.id! },
+      { user: { email: user.email, id: user.id!, name: user.name } }
+    );
+
+    expect(data).toEqual(
+      expect.objectContaining({
+        id: 98,
+        notes: expect.arrayContaining([
+          expect.objectContaining({
+            id: 20,
+          }),
+          expect.objectContaining({
+            id: 21,
+          }),
+        ]),
+      })
+    );
+
+    expect(() =>
+      userResolver.Query.getUserAndNotes(
+        undefined,
+        { id: 999 },
+        {
+          user: { email: "another-email@g.com", id: 999, name: "another-name" },
+        }
+      )
+    ).rejects.toThrow();
   });
 });

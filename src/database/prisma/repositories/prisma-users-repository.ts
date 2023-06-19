@@ -31,6 +31,27 @@ export class PrismaUsersRepository implements IUsersRepository {
     return users.map(prismaUserMapper.toDomain);
   }
 
+  async getUserAndNotes(id: number): Promise<User | null> {
+    const user = await this.prisma.user.findUnique({
+      include: {
+        notes: {
+          orderBy: [
+            { priority: "desc" },
+            { created_at: "desc" },
+            { status: "asc" },
+          ],
+        },
+      },
+      where: {
+        id,
+      },
+    });
+
+    if (!user) return null;
+
+    return prismaUserMapper.toDomain(user);
+  }
+
   async authenticateUser(email: string): Promise<User | null> {
     const user = await this.prisma.user.findFirst({
       where: {
