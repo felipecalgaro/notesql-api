@@ -3,7 +3,7 @@ import typeDefs from "./graphql/typeDefs";
 import resolvers from "./graphql/resolvers";
 import jwt from "jsonwebtoken";
 
-function getUser(token: string) {
+function getPayload(token: string) {
   try {
     if (token) return jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
     return null;
@@ -19,9 +19,7 @@ async function bootstrap() {
     resolvers,
     context: ({ req }) => {
       const token = req.get("Authorization") || "";
-      return {
-        user: getUser(token.replace("Bearer", "")),
-      };
+      return getPayload(token.replace("Bearer", ""));
     },
   });
 

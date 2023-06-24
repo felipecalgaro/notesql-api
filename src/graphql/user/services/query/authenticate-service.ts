@@ -30,8 +30,6 @@ export async function authenticateUserService(
   const token = jwt.sign(
     {
       userId: user.id,
-      name: user.name,
-      email: user.email,
     },
     process.env.ACCESS_TOKEN_SECRET,
     { expiresIn: "1d" }

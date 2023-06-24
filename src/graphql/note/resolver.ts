@@ -13,8 +13,8 @@ import {
   updateNoteStatusService,
 } from "./services/mutation/update-note-status-service";
 import {
-  DeleteNoteArgs,
   deleteNoteService,
+  DeleteNoteArgs,
 } from "./services/mutation/delete-note-service";
 import { Status } from "../../entities/note";
 import { UserContext } from "../user/resolver";

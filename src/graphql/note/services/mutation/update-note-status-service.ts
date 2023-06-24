@@ -10,9 +10,9 @@ export interface UpdateNoteStatusArgs {
 export async function updateNoteStatusService(
   args: UpdateNoteStatusArgs,
   repository: INotesRepository,
-  { user }: UserContext
+  payload: UserContext
 ) {
-  if (!user) throw new Error("You are not authenticated.");
+  if (!payload) throw new Error("You are not authenticated.");
 
   const note = await repository.updateStatus(Number(args.id), args.status);
 

@@ -8,9 +8,9 @@ export interface DeleteNoteArgs {
 export async function deleteNoteService(
   args: DeleteNoteArgs,
   repository: INotesRepository,
-  { user }: UserContext
+  payload: UserContext
 ) {
-  if (!user) throw new Error("You are not authenticated.");
+  if (!payload) throw new Error("You are not authenticated.");
 
   const deleted = await repository.deleteNote(Number(args.id));
 

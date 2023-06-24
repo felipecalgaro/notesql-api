@@ -9,25 +9,6 @@ describe("user resolver", () => {
   const inMemoryUsersRepository = new InMemoryUsersRepository();
   const userResolver = getUserResolver(inMemoryUsersRepository);
 
-  it("should be able to get users", async () => {
-    await Promise.all([
-      inMemoryUsersRepository.createUser(makeUser()),
-      inMemoryUsersRepository.createUser(makeUser()),
-      inMemoryUsersRepository.createUser(makeUser()),
-    ]);
-
-    const users = await userResolver.Query.getUsers();
-
-    expect(users.length).toBe(3);
-    expect(users).toEqual(
-      expect.arrayContaining([
-        expect.objectContaining({ name: "John Doe" }),
-        expect.objectContaining({ name: "John Doe" }),
-        expect.objectContaining({ name: "John Doe" }),
-      ])
-    );
-  });
-
   it("should be able to authenticate user", async () => {
     const hashedPassword = await authService.hashPassword("test-password");
 
@@ -80,8 +61,8 @@ describe("user resolver", () => {
 
     const data = await userResolver.Query.getUserAndNotes(
       undefined,
-      { id: user.id! },
-      { user: { email: user.email, id: user.id!, name: user.name } }
+      undefined,
+      { userId: user.id! }
     );
 
     expect(data).toEqual(
@@ -99,13 +80,9 @@ describe("user resolver", () => {
     );
 
     expect(() =>
-      userResolver.Query.getUserAndNotes(
-        undefined,
-        { id: 999 },
-        {
-          user: { email: "another-email@g.com", id: 999, name: "another-name" },
-        }
-      )
+      userResolver.Query.getUserAndNotes(undefined, undefined, {
+        userId: 999,
+      })
     ).rejects.toThrow();
   });
 });

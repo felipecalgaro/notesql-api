@@ -12,17 +12,12 @@ describe("note resolver", () => {
       undefined,
       {
         note: {
-          authorId: "8",
           body: "This is a note.",
           title: "My note",
         },
       },
       {
-        user: {
-          id: 8,
-          email: "test@email.com",
-          name: "John Doe",
-        },
+        userId: 8,
       }
     );
 
@@ -54,11 +49,7 @@ describe("note resolver", () => {
         priority: true,
       },
       {
-        user: {
-          id: 10,
-          email: "test@email.com",
-          name: "John Doe",
-        },
+        userId: 10,
       }
     );
 
@@ -89,11 +80,7 @@ describe("note resolver", () => {
         status: Status.FINISHED,
       },
       {
-        user: {
-          id: 13,
-          email: "test1@email.com",
-          name: "John Doe",
-        },
+        userId: 13,
       }
     );
 
@@ -112,11 +99,7 @@ describe("note resolver", () => {
         id: "12",
       },
       {
-        user: {
-          id: 12,
-          email: "test1@email.com",
-          name: "John Doe",
-        },
+        userId: 12,
       }
     );
 
@@ -131,11 +114,7 @@ describe("note resolver", () => {
         undefined,
         { id: "99" },
         {
-          user: {
-            id: 99,
-            email: "test1@email.com",
-            name: "John Doe",
-          },
+          userId: 99,
         }
       )
     ).rejects.toThrow();

@@ -4,36 +4,24 @@ import {
   AuthenticateArgs,
   authenticateUserService,
 } from "./services/query/authenticate-service";
-import { getUsersService } from "./services/query/get-users-service";
 import {
   CreateUserArgs,
   createUserService,
 } from "./services/mutation/create-user-service";
-import {
-  GetUserAndNotesArgs,
-  getUserAndNotesService,
-} from "./services/query/get-user-by-id";
+import { getUserAndNotesService } from "./services/query/get-user-and-notes";
 
 export interface UserContext {
-  user?: {
-    id: number;
-    name: string;
-    email: string;
-  };
+  userId: number;
 }
 
 export function getUserResolver(repository: IUsersRepository) {
   return {
     DateTime: DateTimeResolver,
     Query: {
-      getUsers: async () => await getUsersService(repository),
       authenticateUser: async (_: any, args: AuthenticateArgs) =>
         await authenticateUserService(args, repository),
-      getUserAndNotes: async (
-        _: any,
-        args: GetUserAndNotesArgs,
-        context: UserContext
-      ) => await getUserAndNotesService(args, repository, context),
+      getUserAndNotes: async (_: any, args: undefined, context: UserContext) =>
+        await getUserAndNotesService(repository, context),
     },
     Mutation: {
       createUser: async (_: any, args: CreateUserArgs) =>

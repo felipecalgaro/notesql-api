@@ -12,7 +12,6 @@ type Note {
 input NoteInput {
   body: String!
   title: String!
-  authorId: ID!
 }
 
 enum Status {

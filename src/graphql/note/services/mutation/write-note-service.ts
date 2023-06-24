@@ -6,16 +6,15 @@ export interface WriteNoteArgs {
   note: {
     body: string;
     title: string;
-    authorId: string;
   };
 }
 
 export async function writeNoteService(
   args: WriteNoteArgs,
   repository: INotesRepository,
-  { user }: UserContext
+  payload: UserContext
 ) {
-  if (!user) throw new Error("You are not authenticated.");
+  if (!payload) throw new Error("You are not authenticated.");
 
   const note = new Note({
     body: args.note.body,
@@ -24,10 +23,7 @@ export async function writeNoteService(
     status: Status.UNFINISHED,
   });
 
-  const writtenNote = await repository.writeNote(
-    note,
-    Number(args.note.authorId)
-  );
+  const writtenNote = await repository.writeNote(note, payload.userId);
 
   if (!writtenNote) throw new Error("Error while writing a note.");
 
