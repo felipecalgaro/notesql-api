@@ -39,13 +39,18 @@ export async function createUserService(
 
   user.setAvatarUrl(result.Location);
 
-  const createdUser = await repository.createUser(user);
-
-  if (!createdUser) throw new Error("Error while creating a user.");
+  let createdUser;
+  try {
+    createdUser = await repository.createUser(user);
+  } catch {
+    throw new Error(
+      "Error while creating a user. Check the credentials given."
+    );
+  }
 
   const token = jwt.sign(
     {
-      userId: createdUser.id,
+      userId: createdUser!.id,
     },
     process.env.ACCESS_TOKEN_SECRET,
     { expiresIn: "1y" }
