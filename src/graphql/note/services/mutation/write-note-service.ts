@@ -16,6 +16,9 @@ export async function writeNoteService(
 ) {
   if (!payload) throw new Error("You are not authenticated.");
 
+  if (!args.note.title || !args.note.body)
+    throw new Error("Please fill out all fields.");
+
   const note = new Note({
     body: args.note.body,
     title: args.note.title,

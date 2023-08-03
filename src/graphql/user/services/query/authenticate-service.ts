@@ -18,7 +18,9 @@ export async function authenticateUserService(
 
   const user = await repository.authenticateUser(email);
 
-  if (!user) throw new Error("Incorrect e-mail.");
+  if (!user) {
+    throw new Error("Incorrect e-mail.");
+  }
 
   const isPasswordValid = await authService.comparePassword(
     password,
