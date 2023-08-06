@@ -3,13 +3,16 @@ import { UserContext } from "../../resolver";
 
 export async function getUserAndNotesService(
   repository: IUsersRepository,
-  payload: UserContext
+  { userId }: UserContext
 ) {
-  if (!payload) throw new Error("You are not authenticated.");
+  if (!userId) throw new Error("You are not authenticated.");
 
-  const data = await repository.getUserAndNotes(payload.userId);
-
-  if (!data) throw new Error("Could not find a user.");
+  let data;
+  try {
+    data = await repository.getUserAndNotes(userId);
+  } catch {
+    throw new Error("Could not find a user.");
+  }
 
   return data;
 }

@@ -9,9 +9,9 @@ export interface PrioritizeNoteArgs {
 export async function prioritizeNoteService(
   args: PrioritizeNoteArgs,
   repository: INotesRepository,
-  payload: UserContext
+  { userId }: UserContext
 ) {
-  if (!payload) throw new Error("You are not authenticated.");
+  if (!userId) throw new Error("You are not authenticated.");
 
   const note = await repository.prioritizeNote(Number(args.id), args.priority);
 
