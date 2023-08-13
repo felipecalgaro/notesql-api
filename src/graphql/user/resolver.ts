@@ -20,7 +20,7 @@ export function getUserResolver(repository: IUsersRepository) {
     Query: {
       authenticateUser: async (_: any, args: AuthenticateArgs) =>
         await authenticateUserService(args, repository),
-      getUserAndNotes: async (_: any, args: undefined, context: UserContext) =>
+      getUserAndNotes: async (_: any, __: undefined, context: UserContext) =>
         await getUserAndNotesService(repository, context),
     },
     Mutation: {

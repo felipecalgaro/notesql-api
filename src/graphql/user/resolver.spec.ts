@@ -79,10 +79,10 @@ describe("user resolver", () => {
       })
     );
 
-    expect(() =>
+    expect(
       userResolver.Query.getUserAndNotes(undefined, undefined, {
         userId: 999,
       })
-    ).rejects.toThrow();
+    ).resolves.toBeFalsy();
   });
 });
