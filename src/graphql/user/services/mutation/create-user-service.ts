@@ -3,8 +3,8 @@ import { User } from "../../../../entities/user";
 import { IUsersRepository } from "../../../../repositories/users-repository";
 import { authService } from "../auth";
 import jwt from "jsonwebtoken";
-import { execSync } from "child_process";
 import { uploadFile } from "../../../../s3";
+import { generateAvatar } from "../../../../utils/generate-avatar";
 
 export interface CreateUserArgs {
   user: {
@@ -26,11 +26,10 @@ export async function createUserService(
     password: hashedPassword,
   });
 
+  const avatarChar = user.name[0].toUpperCase();
   const filename = `avatar_${Date.now()}`;
 
-  execSync(
-    `npm run generateAvatar -- ${user.name[0].toUpperCase()} ${filename}`
-  );
+  generateAvatar(avatarChar, filename);
 
   const result = await uploadFile({
     filename: `${filename}.png`,

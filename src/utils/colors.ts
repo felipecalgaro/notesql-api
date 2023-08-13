@@ -1,4 +1,4 @@
-module.exports = [
+export default [
   "#ff3856",
   "#454f83",
   "#a54170",
