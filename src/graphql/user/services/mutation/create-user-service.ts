@@ -5,6 +5,7 @@ import { authService } from "../auth";
 import jwt from "jsonwebtoken";
 import { uploadFile } from "../../../../s3";
 import { generateAvatar } from "../../../../utils/generate-avatar";
+import fs from "fs";
 
 export interface CreateUserArgs {
   user: {
@@ -37,6 +38,8 @@ export async function createUserService(
   });
 
   user.setAvatarUrl(result.Location);
+
+  fs.unlinkSync(`uploads/${filename}.png`);
 
   let createdUser;
   try {
