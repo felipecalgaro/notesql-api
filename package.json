@@ -6,7 +6,10 @@
   "scripts": {
     "dev": "npx tsx watch src/server.ts",
     "test": "npx vitest",
-    "generateAvatar": "node src/scripts/generate-avatar.js"
+    "prebuild": "rimraf dist",
+    "build": "tsc -p ./tsconfig.build.json && npx copyfiles **/*.gql -u 1 dist/ -E",
+    "migrate:build": "npx prisma migrate deploy",
+    "prod": "node dist/server.js"
   },
   "keywords": [],
   "author": "",
@@ -27,6 +30,7 @@
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",
     "@types/jsonwebtoken": "^9.0.2",
+    "copyfiles": "^2.4.1",
     "prisma": "^4.11.0",
     "tsx": "^3.12.3",
     "vitest": "^0.28.5"
