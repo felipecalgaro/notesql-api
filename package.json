@@ -32,7 +32,6 @@
     "@types/jsonwebtoken": "^9.0.2",
     "copyfiles": "^2.4.1",
     "prisma": "^4.11.0",
-    "tsc": "^2.0.4",
     "tsx": "^3.12.3",
     "typescript": "^5.1.6",
     "vitest": "^0.28.5"
