@@ -7,7 +7,7 @@
     "dev": "npx tsx watch src/server.ts",
     "test": "npx vitest",
     "prebuild": "npx rimraf dist",
-    "build": "tsc && copyfiles **/*.gql -u 1 dist/ -E",
+    "build": "npx -p typescript tsc && npx copyfiles **/*.gql -u 1 dist/ -E",
     "migrate:build": "npx prisma migrate deploy",
     "prod": "node dist/server.js"
   },
