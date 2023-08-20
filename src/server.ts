@@ -21,6 +21,7 @@ async function bootstrap() {
       const token = req.get("Authorization") || "";
       return getPayload(token.replace("Bearer", ""));
     },
+    cors: { origin: "https://notesql-client.vercel.app/", allowedHeaders: "*" },
   });
 
   const { port } = await server.listen();
