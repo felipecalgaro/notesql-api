@@ -15,5 +15,10 @@ export function generateAvatar(avatarChar: string, filename: string) {
   draw(ctx, color, avatarChar);
 
   const buffer = canvas.toBuffer("image/png");
+
+  if (!fs.existsSync("uploads")) {
+    fs.mkdirSync("uploads");
+  }
+
   fs.writeFileSync(`uploads/${filename}.png`, buffer);
 }
