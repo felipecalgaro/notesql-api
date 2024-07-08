@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { makeUser } from "../../test/factory/user-factory";
-import { Note } from "./note";
+import { Note, Status } from "./note";
 
 describe("note entity", () => {
   it("should be able to create a note", () => {
@@ -10,7 +10,7 @@ describe("note entity", () => {
       body: "This is a test",
       title: "Note title",
       priority: false,
-      status: "UNFINISHED",
+      status: Status.UNFINISHED,
     });
 
     expect(note).toEqual(
