@@ -37,7 +37,7 @@ export async function createUserService(
     path: `uploads/${filename}.png`,
   });
 
-  user.setAvatarUrl(result.Location);
+  user.setAvatarUrl(result.location);
 
   fs.unlinkSync(`uploads/${filename}.png`);
 
