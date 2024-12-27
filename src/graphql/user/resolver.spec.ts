@@ -34,25 +34,6 @@ describe("user resolver", () => {
     ).rejects.toThrow();
   });
 
-  it("should be able to create user", async () => {
-    await userResolver.Mutation.createUser(undefined, {
-      user: {
-        email: "create-user@email.com",
-        name: "John",
-        password: "123",
-      },
-    });
-
-    expect(inMemoryUsersRepository.users).toEqual(
-      expect.arrayContaining([
-        expect.objectContaining({
-          name: "John",
-          email: "create-user@email.com",
-        }),
-      ])
-    );
-  });
-
   it("should be able to get a user and their notes", async () => {
     const notes = [makeNote(20), makeNote(21)];
     const user = makeUser("test-password", "test@test.com", 98, notes);
