@@ -1,7 +1,6 @@
-import { ApolloServer } from "apollo-server-express";
+import { ApolloServer } from "apollo-server";
 import { ApolloServerPluginDrainHttpServer } from "apollo-server-core";
 import http from "http";
-import express from "express";
 import jwt from "jsonwebtoken";
 import typeDefs from "./graphql/typeDefs";
 import resolvers from "./graphql/resolvers";
@@ -16,17 +15,6 @@ function getPayload(token: string) {
   }
 }
 
-const app = express();
-
-app.use((req, res, next) => {
-  res.setHeader(
-    "Access-Control-Allow-Origin",
-    "https://notesql-client.vercel.app"
-  );
-  res.setHeader("Access-Control-Allow-Methods", "*");
-  next();
-});
-
 const httpServer = http.createServer();
 
 async function bootstrap() {
@@ -38,14 +26,14 @@ async function bootstrap() {
       return getPayload(token.replace("Bearer", ""));
     },
     plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
+    cors: {
+      origin: "https://notesql-client.vercel.app",
+    },
   });
 
-  await server.start();
-  server.applyMiddleware({ app });
+  await server.listen(4000);
 
   console.log("server running");
 }
 
 bootstrap();
-
-export default httpServer;
