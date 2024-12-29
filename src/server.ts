@@ -21,14 +21,15 @@ async function bootstrap() {
   const server = new ApolloServer({
     typeDefs,
     resolvers,
-    context: ({ req }) => {
+    context: ({ req, res }) => {
+      res.setHeader(
+        "Access-Control-Allow-Origin",
+        process.env.CLIENT_URI as string
+      );
       const token = req.get("Authorization") || "";
       return getPayload(token.replace("Bearer", ""));
     },
     plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
-    cors: {
-      origin: "https://notesql-client.vercel.app",
-    },
   });
 
   await server.listen(4000);
