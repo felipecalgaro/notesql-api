@@ -1,30 +1,25 @@
-# GraphQL API README
+# NotesQL API
+
+## What I Learned
+
+- How to develop a GraphQL API using SOLID principles, especially Dependency Inversion
+  - This allowed me to write tests for the logic of my app completely independent of the GraphQL language and the database layer
+- How to generate a customized avatar for the user and have it stored in AWS S3
+- How to handle Authentication in a GraphQL API
 
 ## Overview
 
-This is a CRUD API that integrates GraphQL with SOLID principles utilizing Apollo Server. It also uses Vitest for testing, Prisma ORM with PostgreSQL for database management, and AWS S3 for image storage. The primary functionalities of the API include user creation and authentication, as well as CRUD operations for managing notes.
+This is the server side of NotesQL. It's a platform for creating, reading, updating and deleting notes, with user creation and authentication. This API integrates GraphQL and Apollo Server with SOLID principles, uses Vitest for testing, Prisma ORM with PostgreSQL for database management, and AWS S3 for image storage.
+
+The client side repository is in: [https://github.com/felipecalgaro/notesql-client](https://github.com/felipecalgaro/notesql-client)
 
 ## Table of Contents
 
-1. [Environment](#environment)
-2. [Schema](#schema)
-3. [Database models](#database-models)
-4. [Tests](#tests)
-5. [Avatar Generation & Upload](#avatar-generation-&-upload)
-6. [License](#license)
-
-## Environment
-
-This application uses the following variables inside the `.env` file:
-
-```env
-DATABASE_URL
-ACCESS_TOKEN_SECRET
-AWS_BUCKET_NAME
-AWS_BUCKET_REGION
-AWS_ACCESS_KEY_ID
-AWS_SECRET_ACCESS_KEY
-```
+1. [Schema](#schema)
+2. [Database models](#database-models)
+3. [Tests](#tests)
+4. [Avatar Generation & Upload](#avatar-generation--upload)
+5. [License](#license)
 
 ## Schema
 
